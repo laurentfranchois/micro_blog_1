@@ -14,7 +14,7 @@
                             <br>Beverly Hills, CA 90210</p>
                     </div>
                     <div class="footer-col col-md-4">
-                        
+
                     </div>
                     <div class="footer-col col-md-4">
                         <h3>A propos</h3>

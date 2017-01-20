@@ -1,6 +1,21 @@
+
 <?php
 include('includes/connexion.inc.php');
 include('includes/haut.inc.php');
+
+
+if(isset($_POST['email']) && isset($_POST['pwd']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['pseudo'])){
+  ?> <script> alert(</script><?php  echo $_POST['pwd'] ?> <script>)</script> <?php
+  $query='INSERT INTO utilisateur(nom,prenom,mdp,mail,pseudo) values(?,?,?,?,?)';
+  $prep = $pdo->prepare($query);
+  $prep->bindValue(1,$_POST['nom']);
+  $prep->bindValue(2,$_POST['prenom']);
+  $prep->bindValue(3,$_POST['pwd']);
+  $prep->bindValue(4,$_POST['email']);
+  $prep->bindValue(5,$_POST['pseudo']);
+  $prep->execute();
+}
+
 
 if(isset($_POST['email']) && isset($_POST['pwd'])){
   $pwd=$_POST['pwd'];
@@ -15,9 +30,6 @@ if(isset($_POST['email']) && isset($_POST['pwd'])){
 
 
   if($prep->fetch()){
-    ?>
-    <script>alert("Connecté sous l'adresse mail : <?php echo $email ?> ");</script>
-    <?php
     $sid=$email.time();
     $sid=md5($sid);
     setcookie("sid",$sid,time()+300,null,null,false,true);
@@ -46,4 +58,20 @@ if(isset($_POST['email']) && isset($_POST['pwd'])){
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
+<script>
+  alert("erreur");
+  $(function()){
+
+    $('#form').submit(function()){
+      var email=$("#email").val();
+      var pwd=$("#pwd").val();
+
+      if((id=="") || (pwd=="")){
+
+
+      }
+    });
+  });
+</script>
+
 <?php include('includes/bas.inc.php'); ?>

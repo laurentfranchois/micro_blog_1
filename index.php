@@ -6,32 +6,20 @@ $id=0;
 $rep="";
 $npp=5;
 
-  if (isset($_GET['id']) && !empty($_GET['id'])){
-
-    $id=$_GET['id'];
-    $query = "select * from messages where id='".$_GET['id']."'";
-    $prep = $pdo->query($query);
-    if($data=$prep->fetch()){
-      $rep=$data['contenu'];
-    }
-  }
 ?>
-<?php if($connecte==true){?>
+
 <div class="row">
-    <form method="post" action="message.php">
+    <form method="post" action="index.php">
         <div class="col-sm-10">
             <div class="form-group">
-                <textarea id="message" name="message" class="form-control" placeholder="Message"> <?php echo $rep;?></textarea>
-                <input type="hidden" name="id" value=<?php echo $id ?>>
-
+                <textarea id="recherche" name="recherche" class="form-control" placeholder="Recherche"> <?php echo $rep;?></textarea>
             </div>
         </div>
         <div class="col-sm-2">
-            <button type="submit" class="btn btn-success btn-lg">Envoyer</button>
+            <button type="submit" class="btn btn-success btn-lg">Rechercher</button>
         </div>
     </form>
 </div>
-<?php } ?>
 
 <?php
 $query = "select count(*) as total from messages ";
@@ -47,9 +35,28 @@ else{
 }
 
 $index= ($page -1) * $npp;
-$query = 'SELECT *, messages.id as message_id FROM
-          messages INNER JOIN utilisateur on messages.user_id =  utilisateur.id LIMIT '.$index.','.$npp.'';
+if (isset($_POST['recherche']) && !empty($_POST['recherche'])){
+  $variable=$_POST['recherche'];
+  $query = 'SELECT *, messages.id as message_id FROM
+          messages INNER JOIN utilisateur on messages.user_id =  utilisateur.id where messages.contenu LIKE "%'.$variable.'%" ';
+}
+else{
+  $query = 'SELECT *, messages.id as message_id FROM
+          messages INNER JOIN utilisateur on messages.user_id =  utilisateur.id  LIMIT '.$index.','.$npp.'';
+
+}
 $stmt = $pdo->query($query);
+
+if (isset($_GET['id']) && !empty($_GET['id'])){
+
+  $id=$_GET['id'];
+  $query = "select * from messages where id='".$id."'";
+  $prep = $pdo->query($query);
+  if($data=$prep->fetch()){
+    $rep=$data['contenu'];
+  }
+}
+
 
 while ($data = $stmt->fetch()) {
 	?>
@@ -70,6 +77,23 @@ while ($data = $stmt->fetch()) {
 }
 
 ?>
+
+<?php if($connecte==true){?>
+<div class="row">
+    <form method="post" action="message.php">
+        <div class="col-sm-10">
+            <div class="form-group">
+                <textarea id="message" name="message" class="form-control" placeholder="Message"> <?php echo $rep;?></textarea>
+                <input type="hidden" name="id" value=<?php echo $id ?>>
+
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button type="submit" class="btn btn-success btn-lg">Envoyer</button>
+        </div>
+    </form>
+</div>
+<?php } ?>
 
 <ul class="pagination">
   <?php if($page>1){ ?>
